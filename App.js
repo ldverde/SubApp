@@ -1,20 +1,62 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  FlatList,
+  StatusBar,
+  Text,
+  TextInput,
+  ActivityIndicator,
+  View,
+  Button,
+} from "react-native";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <SafeAreaView>
+      <Wo />
+    </SafeAreaView>
+  );
+}
+function Wo() {
+  const [slip, setSlip] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+
+  const getMerc = async () => {
+    try {
+      setLoading(true);
+      const caminhoApi = await fetch("https://api.adviceslip.com/advice");
+      const dadosApi = await caminhoApi.json();
+      setSlip(dadosApi.slip);
+    } catch (error) {
+      setSlip([]);
+      alert("Houve um erro ao carregar o conselho");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getMerc();
+  }, []);
+  const Item = (props) => {
+    return (
+      <View>
+        <Text>{props.item.slip}</Text>
+      </View>
+    )
+  }
+  return (
+    <View>
+      <Text>Conselho: </Text>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <View>
+          <FlatList data={slip} renderItem={({ item }) => <Item item={item} />} keyExtractor={(item) => "#" + item.id}></FlatList>
+        </View>
+      )}
+      <View style={{ width: 200, height: 50 }}>
+        <Button onPress={() => { Item }} title="Conselho Aleatorio"></Button>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
