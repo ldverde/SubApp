@@ -46,12 +46,12 @@ function Wo() {
   }
   return (
     <View>
-      <Text>Conselho: </Text>
+      <Text>Conselho: <br></br> </Text>
       {isLoading ? (
         <ActivityIndicator />
       ) : (
         <View>
-          <FlatList data={slip} renderItem={({ item }) => <Item item={item} />} keyExtractor={(item) => "#" + item.id}></FlatList>
+          <FlatList data={slip} renderItem={({ item }) => <Item item={item} />} keyExtractor={(item) => item.id}></FlatList>
         </View>
       )}
       <View style={{ width: 200, height: 50 }}>
